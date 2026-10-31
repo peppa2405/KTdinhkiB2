@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài kiểm tra định kì lớp 9 chuyên Anh (nâng cao)</title>
+    <style>
+        :root {
+            --primary: #2C3E50;
+            --secondary: #18BC9C;
+            --bg-color: #F8F9FA;
+            --text-color: #333;
+            --border-color: #E2E8F0;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            user-select: none; /* Disable text selection for anti-cheat */
+        }
+        .container {
+            max-width: 900px;
+            margin: 60px auto 40px auto;
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        h1 { color: var(--primary); text-align: center; font-size: 1.8rem; margin-bottom: 5px; }
+        h2 { 
+            color: var(--primary); 
+            font-size: 1.3rem; 
+            border-bottom: 2px solid var(--secondary); 
+            padding-bottom: 8px; 
+            margin-top: 40px; 
+        }
+        h3 { font-size: 1.1rem; color: #555; margin-top: 25px; }
+        .meta-info { text-align: center; font-style: italic; color: #666; margin-bottom: 20px; }
+        .warning { text-align: center; color: #E74C3C; font-size: 0.95rem; font-weight: bold; background: #FDEDEC; padding: 10px; border-radius: 8px; margin-bottom: 30px; }
+        
+        .student-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            background: #F1F5F8;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .student-info label { font-weight: bold; display: block; margin-bottom: 5px; }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+        textarea { resize: vertical; min-height: 200px; }
+        input[type="text"]:focus, textarea:focus { outline: none; border-color: var(--secondary); box-shadow: 0 0 5px rgba(24, 188, 156, 0.3); }
+        
+        .question-block { margin-bottom: 25px; }
+        .question-text { font-weight: 500; margin-bottom: 10px; }
+        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .options label { 
+            cursor: pointer; display: flex; align-items: center; gap: 10px; 
+            padding: 8px 12px; background: #F8F9FA; border: 1px solid #E9ECEF; border-radius: 6px; transition: 0.2s;
+        }
+        .options label:hover { background: #E9ECEF; }
+        
+        .passage-box {
+            background: #F8F9FA;
+            border-left: 4px solid var(--secondary);
+            padding: 20px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 1rem;
+            line-height: 1.8;
+            text-align: justify;
+        }
+        
+        /* New Styles for Open Cloze Test Fix */
+        .cloze-answers {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+            background: #fff;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .cloze-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .cloze-item label {
+            font-weight: bold;
+            color: var(--primary);
+        }
+        .cloze-item input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .inline-blank {
+            display: inline-block;
+            width: 120px;
+            margin: 0 5px;
+            border: none;
+            border-bottom: 1px solid #333;
+            border-radius: 0;
+            padding: 2px 5px;
+            background: transparent;
+            text-align: center;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        .inline-blank:focus { outline: none; border-bottom: 2px solid var(--secondary); box-shadow: none; }
+        
+        .timer-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 12px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        .submit-btn {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 40px;
+            transition: background 0.3s;
+        }
+        .submit-btn:hover { background-color: #128f76; }
+
+        @media (max-width: 768px) {
+            .cloze-answers { grid-template-columns: repeat(3, 1fr); }
+            .options { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 480px) {
+            .cloze-answers { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body oncopy="return false" oncut="return false" onpaste="return false" oncontextmenu="return false">
+
+    <div class="timer-bar" id="timerDisplay">
+        ⏱️ Thời gian còn lại: 120:00
+    </div>
+
+    <div class="container">
+        <h1>BÀI KIỂM TRA ĐỊNH KÌ LỚP 9 CHUYÊN ANH (NÂNG CAO)</h1>
+        <p class="meta-info">Thời gian làm bài: 120 phút | Thang điểm: 100<br>Thí sinh không được dùng tài liệu hay từ điển.</p>
+        
+        <div class="warning">
+            ⚠️ HỆ THỐNG CHỐNG GIAN LẬN ĐANG HOẠT ĐỘNG<br>
+            Tính năng Copy/Paste đã bị vô hiệu hóa. Nếu bạn chuyển tab/thu nhỏ trình duyệt quá 3 lần, bài sẽ tự động nộp.
+        </div>
+        
+        <form action="https://formspree.io/f/mkjgqkrd" method="POST" id="examForm">
+            <!-- Hidden inputs for metadata and auto-grading -->
+            <input type="hidden" name="_subject" value="Bài thi Chuyên Anh - Học Sinh Nộp Bài">
+            <input type="hidden" name="Điểm_Trắc_Nghiệm" id="finalScore" value="">
+            <input type="hidden" name="Lý_Do_Nộp" id="submitReason" value="">
+
+            <div class="student-info">
+                <div>
+                    <label>Họ và tên thí sinh:</label>
+                    <input type="text" name="Họ_và_tên" required placeholder="Nhập đầy đủ họ và tên...">
+                </div>
+                <div>
+                    <label>Lớp:</label>
+                    <input type="text" name="Lớp" required placeholder="Nhập tên lớp...">
+                </div>
+            </div>
+
+            <!-- SECTION I -->
+            <h2>SECTION I. LEXICO-GRAMMAR AND CLOZE TESTS (40 điểm)</h2>
+            
+            <h3>Part 1. Choose the letter A, B, C or D to indicate the correct answer.</h3>
+            
+            <div class="question-block">
+                <p class="question-text">1. Choose the word whose main stress is on a different syllable from the others.</p>
+                <div class="options">
+                    <label><input type="radio" name="q1" value="A"> A. enthusiasm</label>
+                    <label><input type="radio" name="q1" value="B"> B. refugee</label>
+                    <label><input type="radio" name="q1" value="C"> C. responsible</label>
+                    <label><input type="radio" name="q1" value="D"> D. consistent</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">2. The manager was criticised for ______ his staff; they had worked extra hours for months without being properly rewarded.</p>
+                <div class="options">
+                    <label><input type="radio" name="q2" value="A"> A. overpaying</label>
+                    <label><input type="radio" name="q2" value="B"> B. misspaying</label>
+                    <label><input type="radio" name="q2" value="C"> C. underpaying</label>
+                    <label><input type="radio" name="q2" value="D"> D. unpaying</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">3. His ______ to answer such an offensive question was understandable.</p>
+                <div class="options">
+                    <label><input type="radio" name="q3" value="A"> A. reluctant</label>
+                    <label><input type="radio" name="q3" value="B"> B. reluctantly</label>
+                    <label><input type="radio" name="q3" value="C"> C. reluct</label>
+                    <label><input type="radio" name="q3" value="D"> D. reluctance</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">4. Hoa's father works as ______ electrician at ______ factory on the outskirts of ______ Hanoi.</p>
+                <div class="options">
+                    <label><input type="radio" name="q4" value="A"> A. an - a - no article</label>
+                    <label><input type="radio" name="q4" value="B"> B. an - the - the</label>
+                    <label><input type="radio" name="q4" value="C"> C. a - a - the</label>
+                    <label><input type="radio" name="q4" value="D"> D. an - a - the</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">5. Of the five candidates, two were interviewed on Monday and ______ will be interviewed on Friday.</p>
+                <div class="options">
+                    <label><input type="radio" name="q5" value="A"> A. other</label>
+                    <label><input type="radio" name="q5" value="B"> B. another</label>
+                    <label><input type="radio" name="q5" value="C"> C. the others</label>
+                    <label><input type="radio" name="q5" value="D"> D. others</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">6. Although they work in the same office, the two colleagues hardly ever talk to ______.</p>
+                <div class="options">
+                    <label><input type="radio" name="q6" value="A"> A. one the other</label>
+                    <label><input type="radio" name="q6" value="B"> B. another</label>
+                    <label><input type="radio" name="q6" value="C"> C. others</label>
+                    <label><input type="radio" name="q6" value="D"> D. each other</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">7. The visiting team finished with ten men after one of their players was ______ off in the second half.</p>
+                <div class="options">
+                    <label><input type="radio" name="q7" value="A"> A. taken</label>
+                    <label><input type="radio" name="q7" value="B"> B. turned</label>
+                    <label><input type="radio" name="q7" value="C"> C. sent</label>
+                    <label><input type="radio" name="q7" value="D"> D. carried</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">8. It's high time you stopped making excuses and made a real ______ to catch up with your classmates.</p>
+                <div class="options">
+                    <label><input type="radio" name="q8" value="A"> A. mark</label>
+                    <label><input type="radio" name="q8" value="B"> B. mistake</label>
+                    <label><input type="radio" name="q8" value="C"> C. progress</label>
+                    <label><input type="radio" name="q8" value="D"> D. effort</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">9. The flight was ______ by fog, so passengers had to wait at the airport for six hours.</p>
+                <div class="options">
+                    <label><input type="radio" name="q9" value="A"> A. delayed</label>
+                    <label><input type="radio" name="q9" value="B"> B. postponed</label>
+                    <label><input type="radio" name="q9" value="C"> C. adjourned</label>
+                    <label><input type="radio" name="q9" value="D"> D. prevented</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">10. She's always been crazy ______ motorbikes, but her parents strongly object ______ her riding one.</p>
+                <div class="options">
+                    <label><input type="radio" name="q10" value="A"> A. on - with</label>
+                    <label><input type="radio" name="q10" value="B"> B. for - to</label>
+                    <label><input type="radio" name="q10" value="C"> C. about - to</label>
+                    <label><input type="radio" name="q10" value="D"> D. about - against</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">11. Rarely ______ such a talented young player at this age.</p>
+                <div class="options">
+                    <label><input type="radio" name="q11" value="A"> A. we have seen</label>
+                    <label><input type="radio" name="q11" value="B"> B. have we seen</label>
+                    <label><input type="radio" name="q11" value="C"> C. we saw</label>
+                    <label><input type="radio" name="q11" value="D"> D. we had seen</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">12. I wish I ______ more attention in class last year; I wouldn't be struggling now.</p>
+                <div class="options">
+                    <label><input type="radio" name="q12" value="A"> A. had paid</label>
+                    <label><input type="radio" name="q12" value="B"> B. paid</label>
+                    <label><input type="radio" name="q12" value="C"> C. would pay</label>
+                    <label><input type="radio" name="q12" value="D"> D. have paid</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">13. ______ for three hours, the exhausted players finally left the pitch.</p>
+                <div class="options">
+                    <label><input type="radio" name="q13" value="A"> A. Trained</label>
+                    <label><input type="radio" name="q13" value="B"> B. Training</label>
+                    <label><input type="radio" name="q13" value="C"> C. To train</label>
+                    <label><input type="radio" name="q13" value="D"> D. Having trained</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">14. The scheme is designed to ______ the gap between rich and poor students.</p>
+                <div class="options">
+                    <label><input type="radio" name="q14" value="A"> A. broaden</label>
+                    <label><input type="radio" name="q14" value="B"> B. bury</label>
+                    <label><input type="radio" name="q14" value="C"> C. bridge</label>
+                    <label><input type="radio" name="q14" value="D"> D. block</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">15. After months of arguing, the two brothers finally ______ and now speak every day.</p>
+                <div class="options">
+                    <label><input type="radio" name="q15" value="A"> A. fell out</label>
+                    <label><input type="radio" name="q15" value="B"> B. made up</label>
+                    <label><input type="radio" name="q15" value="C"> C. put up</label>
+                    <label><input type="radio" name="q15" value="D"> D. broke down</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">16. Changes in temperature can ______ the delicate balance of the ecosystem.</p>
+                <div class="options">
+                    <label><input type="radio" name="q16" value="A"> A. disturb</label>
+                    <label><input type="radio" name="q16" value="B"> B. manage</label>
+                    <label><input type="radio" name="q16" value="C"> C. sustain</label>
+                    <label><input type="radio" name="q16" value="D"> D. redress</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">17. A good pair of boots is ______ for a trek in the mountains.</p>
+                <div class="options">
+                    <label><input type="radio" name="q17" value="A"> A. attainable</label>
+                    <label><input type="radio" name="q17" value="B"> B. undeniable</label>
+                    <label><input type="radio" name="q17" value="C"> C. verifiable</label>
+                    <label><input type="radio" name="q17" value="D"> D. indispensable</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">18. Online courses have ______ elite education, making it available to everyone.</p>
+                <div class="options">
+                    <label><input type="radio" name="q18" value="A"> A. diminished</label>
+                    <label><input type="radio" name="q18" value="B"> B. democratised</label>
+                    <label><input type="radio" name="q18" value="C"> C. marginalised</label>
+                    <label><input type="radio" name="q18" value="D"> D. solidified</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">19. The thief escaped ______ as a police officer.</p>
+                <div class="options">
+                    <label><input type="radio" name="q19" value="A"> A. disguise</label>
+                    <label><input type="radio" name="q19" value="B"> B. in disguise</label>
+                    <label><input type="radio" name="q19" value="C"> C. disguising</label>
+                    <label><input type="radio" name="q19" value="D"> D. disguised</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">20. __________ the bad weather, the marketing event was a success.</p>
+                <div class="options">
+                    <label><input type="radio" name="q20" value="A"> A. Albeit</label>
+                    <label><input type="radio" name="q20" value="B"> B. Despite of</label>
+                    <label><input type="radio" name="q20" value="C"> C. Nevertheless</label>
+                    <label><input type="radio" name="q20" value="D"> D. Notwithstanding</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">21. The lecture is about several events that changed the __________ of history.</p>
+                <div class="options">
+                    <label><input type="radio" name="q21" value="A"> A. course</label>
+                    <label><input type="radio" name="q21" value="B"> B. cycle</label>
+                    <label><input type="radio" name="q21" value="C"> C. origin</label>
+                    <label><input type="radio" name="q21" value="D"> D. duration</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">22. They are proposing new regulations which __________ the special needs of minority groups.</p>
+                <div class="options">
+                    <label><input type="radio" name="q22" value="A"> A. activate</label>
+                    <label><input type="radio" name="q22" value="B"> B. accommodate</label>
+                    <label><input type="radio" name="q22" value="C"> C. enable</label>
+                    <label><input type="radio" name="q22" value="D"> D. inhabit</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">23. Is football your country’s most popular __________ sport?</p>
+                <div class="options">
+                    <label><input type="radio" name="q23" value="A"> A. audience</label>
+                    <label><input type="radio" name="q23" value="B"> B. onlooker</label>
+                    <label><input type="radio" name="q23" value="C"> C. spectator</label>
+                    <label><input type="radio" name="q23" value="D"> D. viewer</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">24. Nothing __________ than a full refund will satisfy the displeased customer.</p>
+                <div class="options">
+                    <label><input type="radio" name="q24" value="A"> A. another</label>
+                    <label><input type="radio" name="q24" value="B"> B. rather</label>
+                    <label><input type="radio" name="q24" value="C"> C. other</label>
+                    <label><input type="radio" name="q24" value="D"> D. farther</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">25. They haven’t been in need of extra staff as __________, but they may in the future.</p>
+                <div class="options">
+                    <label><input type="radio" name="q25" value="A"> A. though</label>
+                    <label><input type="radio" name="q25" value="B"> B. yet</label>
+                    <label><input type="radio" name="q25" value="C"> C. much</label>
+                    <label><input type="radio" name="q25" value="D"> D. still</label>
+                </div>
+            </div>
+
+            <hr>
+
+            <h3>Part 2. Read the passage and fill each gap with ONE suitable word.</h3>
+            
+            <div class="passage-box">
+                It was midnight when the last guest left. I sighed heavily as I looked around. The living room was <strong>(26) _____</strong> of cigarette smell and stale perfume. As I looked around, I <strong>(27) _____</strong> wet patches of spilt beer on my best Persian carpet. My antique vases were totally smashed. They had even <strong>(28) _____</strong> my antique oak tables as ashtrays. These guests of <strong>(29) _____</strong> had done their best to destroy my expensively decorated living room! What a night this had turned <strong>(30) _____</strong> to be.<br><br>
+                I shook my head. The mess would <strong>(31) _____</strong> hours to clear. Getting <strong>(32) _____</strong> of the smell would require days. My housekeeper would have resigned <strong>(33) _____</strong> the spot if she saw the mess. I had to do <strong>(34) _____</strong> fast. I could not afford to lose her <strong>(35) _____</strong> she is the best cook I <strong>(36) _____</strong> ever had.<br><br>
+                I had no choice. I went to the bookshelf, took <strong>(37) _____</strong> the book 'The Evolution of Man' by Charles Darwin and pressed on the wall behind <strong>(38) _____</strong>. A small hole in the wall appeared <strong>(39) _____</strong> my right. I reached <strong>(40) _____</strong> and took out a long object. Then I waved it in the <strong>(41) _____</strong>. The room started to clean itself <strong>(42) _____</strong>. Even the antique vases started fitting themselves <strong>(43) _____</strong> so well that one could not tell they had been <strong>(44) _____</strong>. As you might have guessed by <strong>(45) _____</strong>, the long object is a wand, and I am what they call a witch.
+            </div>
+
+            <div class="cloze-answers">
+                <div class="cloze-item"><label>26.</label><input type="text" name="cloze_26"></div>
+                <div class="cloze-item"><label>27.</label><input type="text" name="cloze_27"></div>
+                <div class="cloze-item"><label>28.</label><input type="text" name="cloze_28"></div>
+                <div class="cloze-item"><label>29.</label><input type="text" name="cloze_29"></div>
+                <div class="cloze-item"><label>30.</label><input type="text" name="cloze_30"></div>
+                <div class="cloze-item"><label>31.</label><input type="text" name="cloze_31"></div>
+                <div class="cloze-item"><label>32.</label><input type="text" name="cloze_32"></div>
+                <div class="cloze-item"><label>33.</label><input type="text" name="cloze_33"></div>
+                <div class="cloze-item"><label>34.</label><input type="text" name="cloze_34"></div>
+                <div class="cloze-item"><label>35.</label><input type="text" name="cloze_35"></div>
+                <div class="cloze-item"><label>36.</label><input type="text" name="cloze_36"></div>
+                <div class="cloze-item"><label>37.</label><input type="text" name="cloze_37"></div>
+                <div class="cloze-item"><label>38.</label><input type="text" name="cloze_38"></div>
+                <div class="cloze-item"><label>39.</label><input type="text" name="cloze_39"></div>
+                <div class="cloze-item"><label>40.</label><input type="text" name="cloze_40"></div>
+                <div class="cloze-item"><label>41.</label><input type="text" name="cloze_41"></div>
+                <div class="cloze-item"><label>42.</label><input type="text" name="cloze_42"></div>
+                <div class="cloze-item"><label>43.</label><input type="text" name="cloze_43"></div>
+                <div class="cloze-item"><label>44.</label><input type="text" name="cloze_44"></div>
+                <div class="cloze-item"><label>45.</label><input type="text" name="cloze_45"></div>
+            </div>
+
+            <hr>
+
+            <h3>Part 3. Read the passage and choose the answer A, B, C or D that best fits each gap.</h3>
+            <div class="passage-box">
+                In 1934, on his way to London after visiting his friend Agatha Christie, the young Allen Lane stopped at the station bookstall at Exeter St Davids and saw that the books on sale were (46) __________ a poor quality and overpriced. That experience inspired him to create the sixpenny paperback and (47) __________ a global paperback movement. At the (48) __________, this was revolutionary. On a mission to make good quality books affordable, Sir Allen Lane arguably propelled the (49) __________ of reading and made it a pastime that everyone, (50) __________ of their background, could enjoy. <br><br>
+                All he needed was a name for his new (51) __________. It was Sir Allen’s secretary, Joan Coles, (52) __________ suggested the penguin when he expressed his desire for a “dignified but flippant” symbol for his publishing endeavour. (53) __________ with his brothers, Dick and John, Sir Allen decided it would be called Penguin Books. 21-year-old Edward Young was then sent to London Zoo to draw the bird that would become one of the most (54) __________ brands in the world.<br><br>
+                To complement the inclusive pricing of his Penguin books, Sir Allen Lane dreamt (55) __________ the Penguincubator in 1937, a vending machine (56) __________ a selection of Penguin books on Charing Cross Road, London. Sir Allen Lane’s innovative streak is evident here, (57) __________ he identified the demand for books to be available outside of bookshops.<br><br>
+                Today at Penguin Random House, Sir Allen Lane’s founding principles remain as important as ever. A (58) __________ plaque for Sir Allen Lane has been (59) __________ at Exeter St Davids station, in the very (60) __________ where he was inspired to create the sixpenny paperback.
+            </div>
+
+            <div class="question-block">
+                <p class="question-text">46.</p>
+                <div class="options">
+                    <label><input type="radio" name="q46" value="A"> A. of</label>
+                    <label><input type="radio" name="q46" value="B"> B. in</label>
+                    <label><input type="radio" name="q46" value="C"> C. for</label>
+                    <label><input type="radio" name="q46" value="D"> D. on</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">47.</p>
+                <div class="options">
+                    <label><input type="radio" name="q47" value="A"> A. rise</label>
+                    <label><input type="radio" name="q47" value="B"> B. launch</label>
+                    <label><input type="radio" name="q47" value="C"> C. release</label>
+                    <label><input type="radio" name="q47" value="D"> D. issue</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">48.</p>
+                <div class="options">
+                    <label><input type="radio" name="q48" value="A"> A. age</label>
+                    <label><input type="radio" name="q48" value="B"> B. time</label>
+                    <label><input type="radio" name="q48" value="C"> C. present</label>
+                    <label><input type="radio" name="q48" value="D"> D. moment</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">49.</p>
+                <div class="options">
+                    <label><input type="radio" name="q49" value="A"> A. title</label>
+                    <label><input type="radio" name="q49" value="B"> B. formation</label>
+                    <label><input type="radio" name="q49" value="C"> C. figure</label>
+                    <label><input type="radio" name="q49" value="D"> D. profile</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">50.</p>
+                <div class="options">
+                    <label><input type="radio" name="q50" value="A"> A. reckless</label>
+                    <label><input type="radio" name="q50" value="B"> B. thoughtless</label>
+                    <label><input type="radio" name="q50" value="C"> C. regardless</label>
+                    <label><input type="radio" name="q50" value="D"> D. senseless</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">51.</p>
+                <div class="options">
+                    <label><input type="radio" name="q51" value="A"> A. finding</label>
+                    <label><input type="radio" name="q51" value="B"> B. venture</label>
+                    <label><input type="radio" name="q51" value="C"> C. outcome</label>
+                    <label><input type="radio" name="q51" value="D"> D. procedure</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">52.</p>
+                <div class="options">
+                    <label><input type="radio" name="q52" value="A"> A. whom</label>
+                    <label><input type="radio" name="q52" value="B"> B. what</label>
+                    <label><input type="radio" name="q52" value="C"> C. who</label>
+                    <label><input type="radio" name="q52" value="D"> D. which</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">53.</p>
+                <div class="options">
+                    <label><input type="radio" name="q53" value="A"> A. Along</label>
+                    <label><input type="radio" name="q53" value="B"> B. Except</label>
+                    <label><input type="radio" name="q53" value="C"> C. Besides</label>
+                    <label><input type="radio" name="q53" value="D"> D. Alongside</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">54.</p>
+                <div class="options">
+                    <label><input type="radio" name="q54" value="A"> A. recognised</label>
+                    <label><input type="radio" name="q54" value="B"> B. proclaimed</label>
+                    <label><input type="radio" name="q54" value="C"> C. celebratory</label>
+                    <label><input type="radio" name="q54" value="D"> D. declamatory</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">55.</p>
+                <div class="options">
+                    <label><input type="radio" name="q55" value="A"> A. off</label>
+                    <label><input type="radio" name="q55" value="B"> B. up</label>
+                    <label><input type="radio" name="q55" value="C"> C. on</label>
+                    <label><input type="radio" name="q55" value="D"> D. beyond</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">56.</p>
+                <div class="options">
+                    <label><input type="radio" name="q56" value="A"> A. offering</label>
+                    <label><input type="radio" name="q56" value="B"> B. offered</label>
+                    <label><input type="radio" name="q56" value="C"> C. to be offered</label>
+                    <label><input type="radio" name="q56" value="D"> D. having been offered</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">57.</p>
+                <div class="options">
+                    <label><input type="radio" name="q57" value="A"> A. so that</label>
+                    <label><input type="radio" name="q57" value="B"> B. provided</label>
+                    <label><input type="radio" name="q57" value="C"> C. as</label>
+                    <label><input type="radio" name="q57" value="D"> D. thereby</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">58.</p>
+                <div class="options">
+                    <label><input type="radio" name="q58" value="A"> A. memorable</label>
+                    <label><input type="radio" name="q58" value="B"> B. immemorial</label>
+                    <label><input type="radio" name="q58" value="C"> C. commentary</label>
+                    <label><input type="radio" name="q58" value="D"> D. commemorative</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">59.</p>
+                <div class="options">
+                    <label><input type="radio" name="q59" value="A"> A. exposed</label>
+                    <label><input type="radio" name="q59" value="B"> B. revealed</label>
+                    <label><input type="radio" name="q59" value="C"> C. disclosed</label>
+                    <label><input type="radio" name="q59" value="D"> D. unveiled</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">60.</p>
+                <div class="options">
+                    <label><input type="radio" name="q60" value="A"> A. position</label>
+                    <label><input type="radio" name="q60" value="B"> B. locality</label>
+                    <label><input type="radio" name="q60" value="C"> C. spot</label>
+                    <label><input type="radio" name="q60" value="D"> D. speck</label>
+                </div>
+            </div>
+
+            <hr>
+
+            <h3>Part 4. Word Formation</h3>
+            <div class="question-block">
+                <p>61. Our <input type="text" name="wordform_61" class="inline-blank"> software is designed in view of the recent and expected advances in technology. (future)</p>
+                <p>62. The <input type="text" name="wordform_62" class="inline-blank"> beautiful town attracts a lot of tourists every year. (spectacle)</p>
+                <p>63. The mountainous region’s <input type="text" name="wordform_63" class="inline-blank"> has discouraged all but the sturdiest of hikers. (access)</p>
+                <p>64. Unless the child works harder, passing the entrance exam can be a(n) <input type="text" name="wordform_64" class="inline-blank"> struggle. (hill)</p>
+                <p>65. The economy has performed well this year, <input type="text" name="wordform_65" class="inline-blank"> experts’ gloomy predictions. (prove)</p>
+                <p>66. The <input type="text" name="wordform_66" class="inline-blank"> of infrastructure is an investment for future generations. (good)</p>
+                <p>67. Technology has helped us to store sound and pictures <input type="text" name="wordform_67" class="inline-blank">. (digit)</p>
+                <p>68. Paul <input type="text" name="wordform_68" class="inline-blank"> his shoulder while he was practising for the final. (locate)</p>
+                <p>69. Though small, this local bakery offers the tasty egg tarts <input type="text" name="wordform_69" class="inline-blank"> in this city. (equal)</p>
+                <p>70. If you have any health problems, please request permission for <input type="text" name="wordform_70" class="inline-blank"> before regular meetings. (attend)</p>
+            </div>
+
+            <!-- SECTION II -->
+            <h2>SECTION II. READING (30 điểm)</h2>
+            <h3>Read the following passage and choose the correct answer (A, B, C or D) for each of the questions below.</h3>
+            
+            <div class="passage-box">
+                When people learn to play video games, they are learning a new literacy. Of course, this is not the way the word "literacy" is normally used. Traditionally, people think of literacy as the ability to read and write. Why should we think of literacy more broadly? There are two reasons.<br><br>
+                First, language is not the only important communicational system nowadays. Images, symbols, graphs, diagrams, artifacts, and many other visual symbols are particularly significant. Thus, the idea of different types of "visual literacy" would seem to be an important one. For example, interior designs in homes, modernist art in museums, and videos on MTV are other forms of visual literacy.<br><br>
+                Furthermore, today words and images of various sorts are juxtaposed and integrated in a variety of ways. In newspapers, magazines and textbooks, images take up more space. In fact, in modern high school and college textbooks, images not only take up more space but carry meanings independent of the words in the text. In such multimodal texts (texts that mix words and images), the images often communicate different things from the words. And the combination of the two modes communicates things that neither of the modes does separately. Thus, the idea of different sorts of multimodal literacy seems important. Both modes go far beyond images and words to include sounds, music, movement, bodily sensations, and smells.<br><br>
+                We obviously live in a world awash with images. It is our first answer to the question why we should think of literacy more broadly. The second answer is this: Though reading and writing seem so central to what literacy means traditionally, reading and writing are not such general and obvious matters as they might at first seem. After all, we never just read or write; rather, we always read or write something in some way.<br><br>
+                So there are different ways to read different types of texts. Literacy is multiple in the sense that the legal literacy needed for reading law books is not the same as for reading physics texts or superhero comic books. And we should never dismiss the latter form of literacy. Many a superhero comic is replete with post-Freudian irony of a sort that would make a modern literary critic's heart beat fast and confuse any otherwise normal adult. Literacy, then, even as traditionally conceived to involve only print, is not a unitary thing but a multiple matter. There are, even in regard to printed texts and even leaving aside images and multimodal texts, different "literacies."<br><br>
+                Once we see this multiplicity of literacy (literacies), we realize that when we think about reading and writing, we have to think beyond print. Reading and writing in any domain, whether it is law, rap songs, academic essays, superhero comics, or whatever, are not just ways of decoding print, they are also caught up with and in social practices... Video games are a new form of art. They will not replace books but sit beside them, interact with them, and change them as they are already doing strongly with movies. (Many movies are based on video games and are influenced by them.) We have no idea yet how people "read" video games, what meanings they make from them. Still less do we know how they will "read" them in the future.
+            </div>
+
+            <div class="question-block">
+                <p class="question-text">71. All are mentioned as being types of "visual literacy" EXCEPT ___________.</p>
+                <div class="options">
+                    <label><input type="radio" name="q71" value="A"> A. musical tones</label>
+                    <label><input type="radio" name="q71" value="B"> B. interior design</label>
+                    <label><input type="radio" name="q71" value="C"> C. diagrams</label>
+                    <label><input type="radio" name="q71" value="D"> D. modern art</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">72. An example from a science textbook of the phenomenon the author describes in the third paragraph could be ___________.</p>
+                <div class="options">
+                    <label><input type="radio" name="q72" value="A"> A. A genetic tree that coincides with the discussion of specific mammal classes in the text</label>
+                    <label><input type="radio" name="q72" value="B"> B. A diagram of a specific chemical reaction that is used to explain a broad definition in the text</label>
+                    <label><input type="radio" name="q72" value="C"> C. An illustration of a plant cycle that accompanies a chapter on photosynthesis</label>
+                    <label><input type="radio" name="q72" value="D"> D. A cartoon that references the same methods discussed in the text about laboratory safety</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">73. The word “juxtaposed” in paragraph 3 is OPPOSITE in meaning to ___________.</p>
+                <div class="options">
+                    <label><input type="radio" name="q73" value="A"> A. Correlated</label>
+                    <label><input type="radio" name="q73" value="B"> B. Disaggregated</label>
+                    <label><input type="radio" name="q73" value="C"> C. Collocated</label>
+                    <label><input type="radio" name="q73" value="D"> D. Associated</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">74. What is an example of a "multimodal" text?</p>
+                <div class="options">
+                    <label><input type="radio" name="q74" value="A"> A. A dictionary</label>
+                    <label><input type="radio" name="q74" value="B"> B. A movie script</label>
+                    <label><input type="radio" name="q74" value="C"> C. A photo album</label>
+                    <label><input type="radio" name="q74" value="D"> D. An art book that describes the art as well as reproduces images of the original prints</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">75. The phrase "beyond print" is closest in meaning to ___________.</p>
+                <div class="options">
+                    <label><input type="radio" name="q75" value="A"> A. Reading to understand the underlying meanings and themes of the author's words-not just a literal interpretation</label>
+                    <label><input type="radio" name="q75" value="B"> B. Reading text that defines different types of wheat and grains</label>
+                    <label><input type="radio" name="q75" value="C"> C. To read the text from right to left rather than left to right</label>
+                    <label><input type="radio" name="q75" value="D"> D. To read books that use recycled paper and other green alternatives</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">76. In the fifth paragraph, the author suggests that literacy is multiple, meaning that ___________.</p>
+                <div class="options">
+                    <label><input type="radio" name="q76" value="A"> A. To be "literate" can mean participating in any form of expression</label>
+                    <label><input type="radio" name="q76" value="B"> B. One's literacy increases exponentially as greater mastery of reading and writing is achieved</label>
+                    <label><input type="radio" name="q76" value="C"> C. Different genres and modes of expression require different background knowledge and perspectives to understand them</label>
+                    <label><input type="radio" name="q76" value="D"> D. Literacy can only be gained by exploring every type of media and expression</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">77. Why does the author give the example of superhero comics to explain multiple literacies?</p>
+                <div class="options">
+                    <label><input type="radio" name="q77" value="A"> A. To explain that comic books are written for children and purely for entertainment.</label>
+                    <label><input type="radio" name="q77" value="B"> B. To once again refer to his earlier points about "multimodal" texts</label>
+                    <label><input type="radio" name="q77" value="C"> C. To insist that even when an author may intend multiple meanings and interpretations, they are rarely successful.</label>
+                    <label><input type="radio" name="q77" value="D"> D. Things that may seem on the surface to be only meant for a particular group of people can actually have very profound meanings.</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">78. The author suggests that all of the following require different types of literacy and the ability to decode meaning EXCEPT ___________.</p>
+                <div class="options">
+                    <label><input type="radio" name="q78" value="A"> A. rap music</label>
+                    <label><input type="radio" name="q78" value="B"> B. comic books</label>
+                    <label><input type="radio" name="q78" value="C"> C. academic papers</label>
+                    <label><input type="radio" name="q78" value="D"> D. Symphonies</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">79. The author says that video games ___________.</p>
+                <div class="options">
+                    <label><input type="radio" name="q79" value="A"> A. are not yet entirely understood in terms of literacy, but are already impacting other forms of expression such as filmmaking</label>
+                    <label><input type="radio" name="q79" value="B"> B. are unrealistic and should not fall into the same categories as the other texts he describes</label>
+                    <label><input type="radio" name="q79" value="C"> C. are too violent to risk experimenting with for the purposes of understanding literacy</label>
+                    <label><input type="radio" name="q79" value="D"> D. are irrelevant in academic discussion because no one has yet determined how to explain the ways that people understand them</label>
+                </div>
+            </div>
+            <div class="question-block">
+                <p class="question-text">80. What would be the most logical information for the next paragraph to contain if the article continued?</p>
+                <div class="options">
+                    <label><input type="radio" name="q80" value="A"> A. A technological definition of video games, how they are made, and how they are played.</label>
+                    <label><input type="radio" name="q80" value="B"> B. A historical explanation of the very first video game and its evolution.</label>
+                    <label><input type="radio" name="q80" value="C"> C. Examples of the way that some people currently interpret video games and what they mean to them.</label>
+                    <label><input type="radio" name="q80" value="D"> D. A price comparison of video game consoles and whether or not quality has a direct impact on literacy.</label>
+                </div>
+            </div>
+
+            <!-- SECTION III -->
+            <h2>SECTION III. WRITING (30 điểm)</h2>
+            
+            <h3>Part 1. Complete each of the following sentences beginning with the word given so that it has the same meaning as the original one.</h3>
+            
+            <div class="question-block">
+                <p class="question-text">81. The attempt to hide the problem has led to a breakdown in communication.</p>
+                <p>→ Attempting to paper <input type="text" name="transform_81" style="width: 60%; margin-left: 10px;" placeholder="..."> in a communication breakdown.</p>
+            </div>
+            <div class="question-block">
+                <p class="question-text">82. The company’s expansion into various areas has put a strain on its resources.</p>
+                <p>→ Having expanded into various area, the company <input type="text" name="transform_82" style="width: 60%; margin-left: 10px;" placeholder="..."> thin.</p>
+            </div>
+            <div class="question-block">
+                <p class="question-text">83. It’s reported that the politician admitted his involvement in the scandal.</p>
+                <p>→ The politician is reported <input type="text" name="transform_83" style="width: 60%; margin-left: 10px;" placeholder="..."> up to his involvement in the scandal.</p>
+            </div>
+            <div class="question-block">
+                <p class="question-text">84. It was not until he was confronted with the evidence that he admitted his mistake.</p>
+                <p>→ Not until <input type="text" name="transform_84" style="width: 70%; margin-left: 10px;" placeholder="..."></p>
+            </div>
+
+            <h3>Part 2. Essay</h3>
+            <div class="question-block">
+                <p class="question-text">Some people believe that social media helps people overcome loneliness by connecting them with others, while others argue that it makes people feel even lonelier. Discuss both views and give your own opinion.</p>
+                <textarea name="Essay" placeholder="Write your essay here..."></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">NỘP BÀI THI</button>
+        </form>
+    </div>
+
+    <script>
+        // 1. Cấu hình Timer (120 phút)
+        let timeRemaining = 120 * 60; 
+        const timerDisplay = document.getElementById('timerDisplay');
+        const form = document.getElementById('examForm');
+        let isSubmitting = false;
+
+        const timerInterval = setInterval(() => {
+            timeRemaining--;
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            timerDisplay.textContent = `⏱️ Thời gian còn lại: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            
+            if (timeRemaining <= 0) {
+                clearInterval(timerInterval);
+                processAndSubmit("Hết thời gian làm bài");
+            }
+        }, 1000);
+
+        // 2. Chống gian lận chuyển Tab (Tối đa 3 lần)
+        let tabSwitches = 0;
+        const maxSwitches = 3;
+
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden && !isSubmitting) {
+                tabSwitches++;
+                if (tabSwitches >= maxSwitches) {
+                    processAndSubmit(`Gian lận chuyển tab/thu nhỏ quá ${maxSwitches} lần`);
+                } else {
+                    alert(`⚠️ Cảnh báo gian lận (${tabSwitches}/${maxSwitches}): Bạn vừa rời khỏi màn hình làm bài! Lần thứ ${maxSwitches} bài thi sẽ tự động bị thu.`);
+                }
+            }
+        });
+
+        // 3. Logic Chấm điểm tự động phần Trắc nghiệm
+        const answerKey = {
+            'q1': 'B', 'q2': 'C', 'q3': 'D', 'q4': 'A', 'q5': 'C', 'q6': 'D', 'q7': 'C', 'q8': 'D', 'q9': 'A', 'q10': 'C',
+            'q11': 'B', 'q12': 'A', 'q13': 'D', 'q14': 'C', 'q15': 'B', 'q16': 'A', 'q17': 'D', 'q18': 'B', 'q19': 'D', 'q20': 'D',
+            'q21': 'A', 'q22': 'B', 'q23': 'C', 'q24': 'C', 'q25': 'B',
+            'q46': 'A', 'q47': 'B', 'q48': 'B', 'q49': 'D', 'q50': 'C', 'q51': 'B', 'q52': 'C', 'q53': 'A', 'q54': 'A', 'q55': 'B',
+            'q56': 'A', 'q57': 'C', 'q58': 'D', 'q59': 'D', 'q60': 'C',
+            'q71': 'A', 'q72': 'C', 'q73': 'B', 'q74': 'D', 'q75': 'A', 'q76': 'C', 'q77': 'D', 'q78': 'D', 'q79': 'A', 'q80': 'C'
+        };
+
+        function processAndSubmit(reason) {
+            if (isSubmitting) return;
+            isSubmitting = true;
+
+            let score = 0;
+            let totalObjective = Object.keys(answerKey).length;
+
+            // Chấm điểm MCQ
+            for (const [qName, correctAns] of Object.entries(answerKey)) {
+                const selected = document.querySelector(`input[name="${qName}"]:checked`);
+                if (selected && selected.value === correctAns) {
+                    score++;
+                }
+            }
+
+            // Ghi metadata gửi về Formspree
+            document.getElementById('finalScore').value = `${score}/${totalObjective}`;
+            document.getElementById('submitReason').value = reason;
+
+            // Hiển thị thông báo
+            if (reason === "Nộp thủ công") {
+                alert(`Bạn đã hoàn thành bài thi!\nĐiểm phần trắc nghiệm của bạn: ${score}/${totalObjective}\n\nPhần tự luận và viết lại câu sẽ được giáo viên chấm sau.`);
+            } else {
+                alert(`HỆ THỐNG TỰ ĐỘNG NỘP BÀI!\nLý do: ${reason}\nĐiểm phần trắc nghiệm của bạn: ${score}/${totalObjective}`);
+            }
+            
+            // Thực thi gửi form
+            form.submit();
+        }
+
+        // Bắt sự kiện click nộp bài thủ công
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); 
+            if(confirm("Bạn có chắc chắn muốn nộp bài không? Hãy kiểm tra lại cẩn thận trước khi nộp.")) {
+                processAndSubmit("Nộp thủ công");
+            }
+        });
+    </script>
+</body>
+</html>
